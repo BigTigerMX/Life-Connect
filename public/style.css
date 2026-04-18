@@ -2493,3 +2493,277 @@ button:disabled, .btn:disabled {
     0%, 100% { box-shadow: 0 0 20px rgba(220, 38, 38, 0.4); }
     50% { box-shadow: 0 0 40px rgba(220, 38, 38, 0.7); }
 }
+/* Botón específico para Centro de Comando (Azul) */
+.btn-hospital {
+    width: 100%;
+    padding: 20px;
+    background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-hospital:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.btn-hospital:active {
+    transform: translateY(0);
+}
+/* ============================================
+   GUÍA DE PRIMEROS AUXILIOS - VERSIÓN PREMIUM
+   ============================================ */
+
+.first-aid-container {
+    flex: 1;
+    padding: 0 24px 100px;
+    overflow-y: auto;
+}
+
+/* Barra de búsqueda estilizada */
+.search-container {
+    padding: 20px 0;
+    position: sticky;
+    top: 0;
+    background: var(--bg-dark);
+    z-index: 10;
+    backdrop-filter: blur(10px);
+}
+
+.search-box {
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    transition: all 0.3s ease;
+}
+
+.search-box:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.search-box i {
+    color: var(--text-muted);
+    font-size: 18px;
+    margin-right: 12px;
+}
+
+.search-box input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 16px 0;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-family: var(--font-body);
+}
+
+.search-box input:focus {
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: var(--text-muted);
+}
+
+/* Grid de tarjetas */
+.first-aid-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+/* Tarjeta individual */
+.aid-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.aid-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: var(--color-primary);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.aid-card:hover {
+    background: var(--bg-elevated);
+    transform: translateX(8px);
+    border-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.aid-card:hover::before {
+    opacity: 1;
+}
+
+/* Wrapper del icono */
+.aid-icon-wrapper {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+}
+
+.aid-card:hover .aid-icon-wrapper {
+    transform: scale(1.1);
+}
+
+.aid-icon {
+    font-size: 28px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+}
+
+/* Contenido de la tarjeta */
+.aid-content {
+    flex: 1;
+}
+
+.aid-content h3 {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: var(--text-primary);
+}
+
+.aid-content p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+/* Tags de urgencia */
+.aid-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.tag-urgent {
+    background: rgba(220, 38, 38, 0.2);
+    color: #FCA5A5;
+    border: 1px solid rgba(220, 38, 38, 0.3);
+}
+
+.tag-warning {
+    background: rgba(217, 119, 6, 0.2);
+    color: #FCD34D;
+    border: 1px solid rgba(217, 119, 6, 0.3);
+}
+
+.tag-info {
+    background: rgba(37, 99, 235, 0.2);
+    color: #93C5FD;
+    border: 1px solid rgba(37, 99, 235, 0.3);
+}
+
+/* Flecha */
+.aid-arrow {
+    color: var(--text-muted);
+    font-size: 20px;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.aid-card:hover .aid-arrow {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Sección de consejos rápidos */
+.quick-tips-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+}
+
+.quick-tips-section h3 {
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.quick-tips-section h3 i {
+    color: #FCD34D;
+}
+
+.tips-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tip-item {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.tip-item i {
+    color: var(--color-primary);
+    font-size: 18px;
+    width: 24px;
+    text-align: center;
+}
+
+/* Animaciones de entrada */
+.aid-card {
+    opacity: 0;
+    animation: slideRight 0.5s ease forwards;
+}
+
+.aid-card:nth-child(1) { animation-delay: 0.1s; }
+.aid-card:nth-child(2) { animation-delay: 0.15s; }
+.aid-card:nth-child(3) { animation-delay: 0.2s; }
+.aid-card:nth-child(4) { animation-delay: 0.25s; }
+.aid-card:nth-child(5) { animation-delay: 0.3s; }
+.aid-card:nth-child(6) { animation-delay: 0.35s; }

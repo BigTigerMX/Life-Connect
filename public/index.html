@@ -883,50 +883,121 @@
     </div>
 </div>
 
-<!-- PANTALLA 11: GUÍA DE PRIMEROS AUXILIOS -->
+<!-- PANTALLA 11: GUÍA DE PRIMEROS AUXILIOS (VERSIÓN MEJORADA) -->
 <div id="screen-first-aid" class="screen">
     <header class="screen-header">
         <button class="btn-back" onclick="backHome()">
             <i class="fas fa-arrow-left"></i>
         </button>
         <h2>Guía de Primeros Auxilios</h2>
+        <div class="header-spacer"></div>
     </header>
 
     <div class="first-aid-container">
-        <div class="search-box">
-            <i class="fas fa-search"></i>
-            <input type="text" placeholder="Buscar tema..." onkeyup="searchFirstAid(this.value)">
+        <!-- Barra de búsqueda estilizada -->
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Buscar tema..." onkeyup="searchFirstAid(this.value)">
+            </div>
         </div>
 
+        <!-- Grid de temas mejorado -->
         <div class="first-aid-grid" id="first-aid-grid">
-            <!-- Temas de primeros auxilios -->
-            <div class="aid-topic" onclick="showAidDetail('cuts')">
-                <div class="aid-icon">🩹</div>
-                <span>Cortes y heridas</span>
+            <div class="aid-card" onclick="showAidDetail('cpr')">
+                <div class="aid-icon-wrapper">
+                    <div class="aid-icon">🫀</div>
+                </div>
+                <div class="aid-content">
+                    <h3>RCP / Reanimación</h3>
+                    <p>Paro cardíaco, compresiones, desfibrilador</p>
+                    <span class="aid-tag tag-urgent">Crítico</span>
+                </div>
+                <i class="fas fa-chevron-right aid-arrow"></i>
             </div>
-            <div class="aid-topic" onclick="showAidDetail('burns')">
-                <div class="aid-icon">🔥</div>
-                <span>Quemaduras</span>
+
+            <div class="aid-card" onclick="showAidDetail('bleeding')">
+                <div class="aid-icon-wrapper">
+                    <div class="aid-icon">🩸</div>
+                </div>
+                <div class="aid-content">
+                    <h3>Sangrado Grave</h3>
+                    <p>Hemorragias, heridas profundas, torniquetes</p>
+                    <span class="aid-tag tag-urgent">Crítico</span>
+                </div>
+                <i class="fas fa-chevron-right aid-arrow"></i>
             </div>
-            <div class="aid-topic" onclick="showAidDetail('fractures')">
-                <div class="aid-icon">🦴</div>
-                <span>Fracturas</span>
+
+            <div class="aid-card" onclick="showAidDetail('choking')">
+                <div class="aid-icon-wrapper">
+                    <div class="aid-icon">🗣️</div>
+                </div>
+                <div class="aid-content">
+                    <h3>Atragantamiento</h3>
+                    <p>Manobra de Heimlich, vías respiratorias</p>
+                    <span class="aid-tag tag-urgent">Crítico</span>
+                </div>
+                <i class="fas fa-chevron-right aid-arrow"></i>
             </div>
-            <div class="aid-topic" onclick="showAidDetail('choking')">
-                <div class="aid-icon">🗣️</div>
-                <span>Atragantamiento</span>
+
+            <div class="aid-card" onclick="showAidDetail('burns')">
+                <div class="aid-icon-wrapper">
+                    <div class="aid-icon">🔥</div>
+                </div>
+                <div class="aid-content">
+                    <h3>Quemaduras</h3>
+                    <p>Primer, segundo y tercer grado</p>
+                    <span class="aid-tag tag-warning">Moderado</span>
+                </div>
+                <i class="fas fa-chevron-right aid-arrow"></i>
             </div>
-            <div class="aid-topic" onclick="showAidDetail('cpr')">
-                <div class="aid-icon">🫀</div>
-                <span>CPR/RCP</span>
+
+            <div class="aid-card" onclick="showAidDetail('fractures')">
+                <div class="aid-icon-wrapper">
+                    <div class="aid-icon">🦴</div>
+                </div>
+                <div class="aid-content">
+                    <h3>Fracturas</h3>
+                    <p>Huesos rotos, inmovilización, esguinces</p>
+                    <span class="aid-tag tag-warning">Moderado</span>
+                </div>
+                <i class="fas fa-chevron-right aid-arrow"></i>
             </div>
-            <div class="aid-topic" onclick="showAidDetail('bleeding')">
-                <div class="aid-icon">🩸</div>
-                <span>Sangrado</span>
+
+            <div class="aid-card" onclick="showAidDetail('cuts')">
+                <div class="aid-icon-wrapper">
+                    <div class="aid-icon">🩹</div>
+                </div>
+                <div class="aid-content">
+                    <h3>Cortes y Heridas</h3>
+                    <p>Suturas, vendajes, desinfección</p>
+                    <span class="aid-tag tag-info">Leve</span>
+                </div>
+                <i class="fas fa-chevron-right aid-arrow"></i>
+            </div>
+        </div>
+
+        <!-- Sección de consejos rápidos -->
+        <div class="quick-tips-section">
+            <h3><i class="fas fa-lightbulb"></i> Consejos Rápidos</h3>
+            <div class="tips-grid">
+                <div class="tip-item">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>En duda, llama al 911 primero</span>
+                </div>
+                <div class="tip-item">
+                    <i class="fas fa-hands-wash"></i>
+                    <span>Lava tus manos antes de tocar heridas</span>
+                </div>
+                <div class="tip-item">
+                    <i class="fas fa-ambulance"></i>
+                    <span>No muevas a un herido grave</span>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 
 <!-- MODAL: DETALLE DE HISTORIAL -->
 <div id="modal-history-detail" class="modal hidden">
