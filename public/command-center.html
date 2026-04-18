@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeConnect - Centro de Comando</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #0a0a0a; 
+            color: white;
+            overflow: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: #1a1a1a;
+            padding: 15px 30px;
+            border-bottom: 3px solid #DC2626;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo { 
+            font-size: 24px; 
+            font-weight: bold;
+            color: #DC2626;
+        }
+        
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10B981;
+            animation: pulse 2s infinite;
+        }
+        
+        .status-dot.offline { background: #EF4444; animation: none; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            height: calc(100vh - 70px);
+        }
+        
+        /* Panel izquierdo - Emergencias activas */
+        .emergency-panel {
+            background: #151515;
+            border-right: 1px solid #333;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .panel-title {
+            font-size: 14px;
+            text-transform: uppercase;
+            color: #888;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+        
+        .emergency-card {
+            background: #1f1f1f;
+            border-left: 4px solid #DC2626;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .emergency-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.3);
+        }
+        
+        .emergency-card.new {
+            animation: slideIn 0.5s ease;
+            border-left-color: #F59E0B;
+            background: #2a1f1f;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .emergency-code {
+            font-family: monospace;
+            font-size: 18px;
+            color: #DC2626;
+            font-weight: bold;
+        }
+        
+        .emergency-type {
+            font-size: 16px;
+            margin: 5px 0;
+            color: white;
+        }
+        
+        .emergency-time {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .emergency-location {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .badge-urgent { background: #DC2626; color: white; }
+        .badge-pending { background: #F59E0B; color: black; }
+        .badge-active { background: #3B82F6; color: white; }
+        
+        /* Centro - Mapa */
+        .map-container {
+            position: relative;
+            background: #0f0f0f;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23111" width="100" height="100"/><path fill="%23222" d="M0 0h100v100H0z" opacity=".5"/></svg>');
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-size: 18px;
+        }
+        
+        /* Simulación de mapa con grid */
+        .map-grid {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        
+        .map-marker:hover { transform: scale(1.2); z-index: 100; }
+        
+        .marker-emergency {
+            background: #DC2626;
+            border: 3px solid white;
+            animation: blink 1.5s infinite;
+        }
+        
+        .marker-ambulance {
+            background: #10B981;
+            border: 3px solid white;
+        }
+        
+        .marker-ambulance.busy { background: #F59E0B; }
+        
+        @keyframes blink {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+            50% { box-shadow: 0 0 0 20px rgba(220, 38, 38, 0); }
+        }
+        
+        /* Panel derecho - Detalles */
+        .details-panel {
+            background: #151515;
+            border-left: 1px solid #333;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .detail-section {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #333;
+        }
+        
+        .detail-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .detail-content {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .patient-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .patient-info {
+            color: #aaa;
+            font-size: 14px;
+        }
+        
+        .vital-sign {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 10px;
+            background: #1f1f1f;
+            border-radius: 6px;
+        }
+        
+        .vital-label { color: #888; font-size: 13px; }
+        .vital-value { color: white; font-weight: bold; }
+        
+        .alert-box {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid #DC2626;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .alert-title {
+            color: #DC2626;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Botones de acción */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:hover { opacity: 0.9; }
+        
+        .btn-primary { background: #DC2626; color: white; }
+        .btn-secondary { background: #333; color: white; }
+        .btn-success { background: #10B981; color: white; }
+        
+        /* Notificación emergente */
+        .toast-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .toast {
+            background: #1f1f1f;
+            border-left: 4px solid #DC2626;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            animation: slideInRight 0.3s ease;
+            max-width: 300px;
+        }
+        
+        .toast.success { border-left-color: #10B981; }
+        .toast.error { border-left-color: #DC2626; }
+        .toast.info { border-left-color: #3B82F6; }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .toast-title { font-weight: bold; margin-bottom: 5px; }
+        .toast-message { font-size: 14px; color: #aaa; }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-icon { font-size: 48px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">🚑 LifeConnect Centro de Comando</div>
+        <div class="status">
+            <div id="server-status-dot" class="status-dot offline"></div>
+            <span id="server-status-text">Conectando...</span>
+        </div>
+    </div>
+    
+    <!-- Layout principal -->
+    <div class="container">
+        <!-- Panel izquierdo: Lista de emergencias -->
+        <div class="emergency-panel">
+            <div class="panel-title">Emergencias Activas</div>
+            <div id="emergency-list">
+                <div class="empty-state">
+                    <div class="empty-icon">📡</div>
+                    <div>Esperando emergencias...</div>
+                    <div style="font-size: 12px; margin-top: 10px; color: #555;">Las alertas aparecerán aquí automáticamente</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Centro: Mapa -->
+        <div class="map-container">
+            <div class="map-grid" id="map">
+                <!-- Marcadores se generan dinámicamente -->
+            </div>
+        </div>
+        
+        <!-- Panel derecho: Detalles -->
+        <div class="details-panel" id="details-panel">
+            <div class="empty-state">
+                <div class="empty-icon">📋</div>
+                <div>Selecciona una emergencia</div>
+                <div style="font-size: 12px; margin-top: 10px; color: #555;">Haz clic en una alerta para ver detalles</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Notificaciones -->
+    <div class="toast-container" id="toast-container"></div>
+    
+    <!-- Audio para alertas (opcional) -->
+    <audio id="alert-sound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTGH0fPTgjMGHm7A7+OZSA0PVanu8LdnHAU2k9n1unEiBC13yO/eizEIHWq+8+OZSA0PVantu6tlHAU2k9n1" type="audio/wav">
+    </audio>
+
+    <script>
+        // Configuración
+        const WS_URL = window.location.origin.replace('http', 'ws'); // Auto-detecta ws://localhost:3000
+        let ws = null;
+        let activeEmergencies = [];
+        let selectedEmergency = null;
+        
+        // Conectar WebSocket
+        function connectWebSocket() {
+            ws = new WebSocket(WS_URL);
+            
+            ws.onopen = () => {
+                console.log('✅ Conectado al Centro de Comando');
+                document.getElementById('server-status-dot').className = 'status-dot';
+                document.getElementById('server-status-text').textContent = 'Conectado - Esperando emergencias';
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                handleMessage(data);
+            };
+            
+            ws.onclose = () => {
+                console.log('Desconectado, reintentando...');
+                document.getElementById('server-status-dot').className = 'status-dot offline';
+                document.getElementById('server-status-text').textContent = 'Desconectado - Reconectando...';
+                setTimeout(connectWebSocket, 3000);
+            };
+            
+            ws.onerror = (error) => {
+                console.error('Error WebSocket:', error);
+            };
+        }
+        
+        // Manejar mensajes del servidor
+        function handleMessage(data) {
+            switch(data.type) {
+                case 'INIT':
+                    // Cargar emergencias existentes
+                    if (data.emergencies && data.emergencies.length > 0) {
+                        data.emergencies.forEach(emg => addEmergencyToList(emg));
+                    }
+                    break;
+                    
+                case 'NEW_EMERGENCY':
+                    // ¡Nueva emergencia desde el celular!
+                    addEmergencyToList(data, true); // true = es nueva (animación)
+                    showToast('🚨 NUEVA EMERGENCIA', `Código: ${data.code} - ${data.type}`, 'error');
+                    playAlertSound();
+                    break;
+            }
+        }
+        
+        // Agregar emergencia a la lista
+        function addEmergencyToList(emergency, isNew = false) {
+            activeEmergencies.push(emergency);
+            renderEmergencyList();
+            
+            // Si es nueva, mostrar en mapa
+            if (isNew) {
+                addMarkerToMap(emergency);
+            }
+        }
+        
+        // Renderizar lista de emergencias
+        function renderEmergencyList() {
+            const container = document.getElementById('emergency-list');
+            
+            if (activeEmergencies.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📡</div>
+                        <div>Esperando emergencias...</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = activeEmergencies.map(emg => `
+                <div class="emergency-card ${emg.isNew ? 'new' : ''}" onclick="selectEmergency('${emg.code}')">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span class="emergency-code">#${emg.code}</span>
+                        <span class="badge badge-urgent">URGENTE</span>
+                    </div>
+                    <div class="emergency-type">${getEmergencyTypeName(emg.type)}</div>
+                    <div class="emergency-time">${new Date(emg.timestamp).toLocaleTimeString()}</div>
+                    <div class="emergency-location">📍 ${emg.location || 'Ubicación no especificada'}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Nombres legibles de tipos de emergencia
+        function getEmergencyTypeName(type) {
+            const types = {
+                'heart': 'Paro Cardíaco / RCP',
+                'bleeding': 'Sangrado Grave',
+                'breathing': 'Dificultad Respiratoria',
+                'fall': 'Caída / Trauma',
+                'poison': 'Intoxicación / Picadura',
+                'other': 'Otra Emergencia'
+            };
+            return types[type] || 'Emergencia';
+        }
+        
+        // Seleccionar emergencia para ver detalles
+        function selectEmergency(code) {
+            const emergency = activeEmergencies.find(e => e.code === code);
+            if (!emergency) return;
+            
+            selectedEmergency = emergency;
+            renderDetails(emergency);
+        }
+        
+        // Mostrar detalles en panel derecho
+        function renderDetails(emergency) {
+            const panel = document.getElementById('details-panel');
+            
+            const patient = emergency.patientData || {};
+            
+            panel.innerHTML = `
+                <div class="detail-section">
+                    <div class="detail-title">Código de Emergencia</div>
+                    <div class="patient-name">#${emergency.code}</div>
+                    <div class="patient-info">Reportado: ${new Date(emergency.timestamp).toLocaleString()}</div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">Tipo de Emergencia</div>
+                    <div class="detail-content" style="font-size: 20px; color: #DC2626;">
+                        ${getEmergencyTypeName(emergency.type)}
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">Paciente</div>
+                    <div class="patient-name">${patient.name || 'No identificado'}</div>
+                    <div class="patient-info">
+                        ${patient.age ? patient.age + ' años • ' : ''}
+                        ${patient.bloodType ? 'Tipo ' + patient.bloodType : ''}
+                    </div>
+                    ${patient.conditions ? `
+                        <div class="alert-box">
+                            <div class="alert-title">⚠️ Condiciones Preexistentes</div>
+                            <div>${patient.conditions.join(', ')}</div>
+                        </div>
+                    ` : ''}
+                    ${patient.allergies ? `
+                        <div class="alert-box" style="border-color: #F59E0B; background: rgba(245, 158, 11, 0.1);">
+                            <div class="alert-title" style="color: #F59E0B;">🚨 Alergias</div>
+                            <div>${patient.allergies}</div>
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">Contacto de Emergencia</div>
+                    <div class="detail-content">
+                        ${patient.contactName || 'No especificado'}<br>
+                        ${patient.contactPhone ? '📞 ' + patient.contactPhone : ''}
+                    </div>
+                </div>
+                
+                <div class="detail-section">
+                    <div class="detail-title">Ubicación</div>
+                    <div class="detail-content">
+                        ${emergency.location || 'Esperando coordenadas GPS...'}
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="assignAmbulance('${emergency.code}')">
+                        🚑 Asignar Ambulancia
+                    </button>
+                    <button class="btn btn-secondary" onclick="contactPatient('${emergency.code}')">
+                        📞 Llamar
+                    </button>
+                </div>
+                
+                <div class="action-buttons" style="margin-top: 10px;">
+                    <button class="btn btn-success" onclick="resolveCase('${emergency.code}')">
+                        ✓ Marcar como Atendido
+                    </button>
+                </div>
+            `;
+        }
+        
+        // Agregar marcador al mapa (simulado)
+        function addMarkerToMap(emergency) {
+            const map = document.getElementById('map');
+            
+            // Posición aleatoria para demo (en producción usarías coordenadas reales)
+            const top = 20 + Math.random() * 60;
+            const left = 20 + Math.random() * 60;
+            
+            const marker = document.createElement('div');
+            marker.className = 'map-marker marker-emergency';
+            marker.style.top = top + '%';
+            marker.style.left = left + '%';
+            marker.title = `Emergencia #${emergency.code}`;
+            marker.innerHTML = '🚨';
+            marker.onclick = () => selectEmergency(emergency.code);
+            
+            map.appendChild(marker);
+            
+            // Animación de entrada
+            marker.animate([
+                { transform: 'scale(0)', opacity: 0 },
+                { transform: 'scale(1.2)', opacity: 1 },
+                { transform: 'scale(1)', opacity: 1 }
+            ], {
+                duration: 500,
+                easing: 'ease-out'
+            });
+        }
+        
+        // Toast notifications
+        function showToast(title, message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+        
+        // Sonido de alerta
+        function playAlertSound() {
+            const audio = document.getElementById('alert-sound');
+            audio.volume = 0.5;
+            audio.play().catch(e => console.log('No se pudo reproducir sonido'));
+        }
+        
+        // Acciones de botones (simuladas por ahora)
+        function assignAmbulance(code) {
+            showToast('✅ Ambulancia asignada', `Unidad AMB-42 asignada a emergencia #${code}`, 'success');
+        }
+        
+        function contactPatient(code) {
+            showToast('📞 Llamando', 'Conectando con número de emergencia...', 'info');
+        }
+        
+        function resolveCase(code) {
+            if (confirm('¿Confirmar que esta emergencia fue atendida?')) {
+                // Enviar al servidor
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({
+                        type: 'CLOSE_SERVICE',
+                        emergencyId: code,
+                        resolution: 'completed'
+                    }));
+                }
+                
+                // Remover de la lista local
+                activeEmergencies = activeEmergencies.filter(e => e.code !== code);
+                renderEmergencyList();
+                document.getElementById('details-panel').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">✓</div>
+                        <div>Emergencia atendida</div>
+                    </div>
+                `;
+                
+                showToast('✓ Caso cerrado', 'Emergencia marcada como atendida', 'success');
+            }
+        }
+        
+        // Iniciar conexión al cargar
+        connectWebSocket();
+    </script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">LifeConnect</string>
+    <string name="title_activity_main">LifeConnect</string>
+    <string name="package_name">com.lifeconnect.app</string>
+    <string name="custom_url_scheme">com.lifeconnect.app</string>
+</resources>
