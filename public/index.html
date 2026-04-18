@@ -883,103 +883,312 @@
     </div>
 </div>
 
-<!-- PANTALLA 11: GUÍA DE PRIMEROS AUXILIOS -->
+<!-- PANTALLA 11: GUÍA DE PRIMEROS AUXILIOS (VERSIÓN FINAL) -->
 <div id="screen-first-aid" class="screen">
-    <header class="screen-header">
-        <button class="btn-back" onclick="backHome()">
+    <style>
+        /* CSS Específico para esta pantalla - Inline para evitar caché */
+        #screen-first-aid {
+            background: #0B0F19 !important;
+        }
+        
+        #screen-first-aid .header {
+            display: flex;
+            align-items: center;
+            padding: 20px 24px;
+            background: rgba(11, 15, 25, 0.95);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        #screen-first-aid .header h2 {
+            flex: 1;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: #F8FAFC;
+            margin: 0;
+        }
+        
+        #screen-first-aid .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        /* Buscador */
+        .aid-search {
+            position: relative;
+            margin-bottom: 24px;
+            background: #151925;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .aid-search i {
+            color: #64748B;
+            font-size: 18px;
+            margin-right: 12px;
+        }
+        
+        .aid-search input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 16px 0;
+            color: #F8FAFC;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .aid-search input::placeholder {
+            color: #64748B;
+        }
+        
+        /* Grid de tarjetas */
+        .topics-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+        
+        /* Tarjeta individual */
+        .topic-card {
+            background: #151925;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .topic-card:hover {
+            background: #1E2330;
+            transform: translateX(8px);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #DC2626;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .topic-card:hover::before {
+            opacity: 1;
+        }
+        
+        /* Icono */
+        .topic-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+            transition: transform 0.3s;
+        }
+        
+        .topic-card:hover .topic-icon {
+            transform: scale(1.1);
+        }
+        
+        .icon-red { background: rgba(220, 38, 38, 0.2); }
+        .icon-orange { background: rgba(217, 119, 6, 0.2); }
+        .icon-blue { background: rgba(37, 99, 235, 0.2); }
+        .icon-purple { background: rgba(139, 92, 246, 0.2); }
+        .icon-green { background: rgba(5, 150, 105, 0.2); }
+        .icon-yellow { background: rgba(245, 158, 11, 0.2); }
+        
+        /* Info */
+        .topic-info {
+            flex: 1;
+        }
+        
+        .topic-info h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            color: #F8FAFC;
+            margin: 0 0 4px 0;
+        }
+        
+        .topic-info p {
+            font-size: 14px;
+            color: #94A3B8;
+            margin: 0;
+        }
+        
+        /* Flecha */
+        .topic-arrow {
+            color: #64748B;
+            font-size: 18px;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+        
+        .topic-card:hover .topic-arrow {
+            opacity: 1;
+            color: #DC2626;
+            transform: translateX(5px);
+        }
+        
+        /* Consejos */
+        .tips-box {
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            margin-top: 10px;
+        }
+        
+        .tips-box h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            color: #F8FAFC;
+            margin: 0 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tips-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tips-box li {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #CBD5E1;
+            margin-bottom: 12px;
+        }
+        
+        .tips-box li i {
+            color: #10B981;
+        }
+    </style>
+
+    <div class="header">
+        <button class="btn-back" onclick="backHome()" style="width: 40px; height: 40px; background: #1E2330; border: none; border-radius: 12px; color: white; margin-right: 16px; cursor: pointer;">
             <i class="fas fa-arrow-left"></i>
         </button>
         <h2>Primeros Auxilios</h2>
-        <div class="header-spacer"></div>
-    </header>
+        <div style="width: 40px;"></div>
+    </div>
 
-    <div class="first-aid-wrapper">
+    <div class="content">
         <!-- Buscador -->
-        <div class="aid-search-box">
+        <div class="aid-search">
             <i class="fas fa-search"></i>
-            <input type="text" id="aid-search-input" placeholder="¿Qué necesitas buscar?" onkeyup="searchFirstAid(this.value)">
+            <input type="text" placeholder="Buscar tema..." onkeyup="filterTopics(this.value)">
         </div>
 
         <!-- Grid de temas -->
-        <div class="aid-topics-grid">
-            <div class="aid-topic-card" onclick="showAidDetail('cpr')">
-                <div class="topic-icon-bg" style="background: rgba(220, 38, 38, 0.2);">
-                    <span>🫀</span>
-                </div>
+        <div class="topics-grid" id="topics-container">
+            <div class="topic-card" onclick="showAidDetail('cpr')">
+                <div class="topic-icon icon-red">🫀</div>
                 <div class="topic-info">
-                    <h4>Reanimación CPR</h4>
-                    <p>Paro cardíaco, compresiones</p>
+                    <h3>Reanimación CPR</h3>
+                    <p>Paro cardíaco, compresiones, desfibrilador</p>
                 </div>
-                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-chevron-right topic-arrow"></i>
             </div>
 
-            <div class="aid-topic-card" onclick="showAidDetail('bleeding')">
-                <div class="topic-icon-bg" style="background: rgba(217, 119, 6, 0.2);">
-                    <span>🩸</span>
-                </div>
+            <div class="topic-card" onclick="showAidDetail('bleeding')">
+                <div class="topic-icon icon-orange">🩸</div>
                 <div class="topic-info">
-                    <h4>Hemorragias</h4>
-                    <p>Sangrado grave, heridas</p>
+                    <h3>Hemorragias</h3>
+                    <p>Sangrado grave, heridas, torniquetes</p>
                 </div>
-                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-chevron-right topic-arrow"></i>
             </div>
 
-            <div class="aid-topic-card" onclick="showAidDetail('choking')">
-                <div class="topic-icon-bg" style="background: rgba(37, 99, 235, 0.2);">
-                    <span>🗣️</span>
-                </div>
+            <div class="topic-card" onclick="showAidDetail('choking')">
+                <div class="topic-icon icon-blue">🗣️</div>
                 <div class="topic-info">
-                    <h4>Atragantamiento</h4>
-                    <p>Obstrucción vías aéreas</p>
+                    <h3>Atragantamiento</h3>
+                    <p>Obstrucción vías aéreas, Heimlich</p>
                 </div>
-                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-chevron-right topic-arrow"></i>
             </div>
 
-            <div class="aid-topic-card" onclick="showAidDetail('burns')">
-                <div class="topic-icon-bg" style="background: rgba(245, 158, 11, 0.2);">
-                    <span>🔥</span>
-                </div>
+            <div class="topic-card" onclick="showAidDetail('burns')">
+                <div class="topic-icon icon-yellow">🔥</div>
                 <div class="topic-info">
-                    <h4>Quemaduras</h4>
+                    <h3>Quemaduras</h3>
                     <p>Primeros auxilios térmicos</p>
                 </div>
-                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-chevron-right topic-arrow"></i>
             </div>
 
-            <div class="aid-topic-card" onclick="showAidDetail('fractures')">
-                <div class="topic-icon-bg" style="background: rgba(139, 92, 246, 0.2);">
-                    <span>🦴</span>
-                </div>
+            <div class="topic-card" onclick="showAidDetail('fractures')">
+                <div class="topic-icon icon-purple">🦴</div>
                 <div class="topic-info">
-                    <h4>Fracturas</h4>
-                    <p>Huesos rotos, inmovilizar</p>
+                    <h3>Fracturas</h3>
+                    <p>Huesos rotos, inmovilización</p>
                 </div>
-                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-chevron-right topic-arrow"></i>
             </div>
 
-            <div class="aid-topic-card" onclick="showAidDetail('cuts')">
-                <div class="topic-icon-bg" style="background: rgba(16, 185, 129, 0.2);">
-                    <span>🩹</span>
-                </div>
+            <div class="topic-card" onclick="showAidDetail('cuts')">
+                <div class="topic-icon icon-green">🩹</div>
                 <div class="topic-info">
-                    <h4>Cortes</h4>
-                    <p>Heridas menores, vendajes</p>
+                    <h3>Cortes y Heridas</h3>
+                    <p>Suturas, vendajes, desinfección</p>
                 </div>
-                <i class="fas fa-chevron-right"></i>
+                <i class="fas fa-chevron-right topic-arrow"></i>
             </div>
         </div>
 
         <!-- Consejos -->
-        <div class="aid-tips-box">
+        <div class="tips-box">
             <h3><i class="fas fa-star" style="color: #FCD34D;"></i> Reglas de Oro</h3>
             <ul>
-                <li><i class="fas fa-check" style="color: #10B981;"></i> Mantén la calma siempre</li>
-                <li><i class="fas fa-check" style="color: #10B981;"></i> Llama al 911 antes de actuar si es grave</li>
-                <li><i class="fas fa-check" style="color: #10B981;"></i> No muevas al herido si sospechas fractura</li>
+                <li><i class="fas fa-check-circle"></i> Mantén la calma siempre</li>
+                <li><i class="fas fa-check-circle"></i> Llama al 911 antes de actuar si es grave</li>
+                <li><i class="fas fa-check-circle"></i> No muevas al herido si sospechas fractura</li>
+                <li><i class="fas fa-check-circle"></i> Asegura la zona antes de atender</li>
             </ul>
         </div>
     </div>
+
+    <script>
+        // Función de filtro local
+        function filterTopics(query) {
+            const cards = document.querySelectorAll('.topic-card');
+            const lower = query.toLowerCase();
+            
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                card.style.display = text.includes(lower) ? 'flex' : 'none';
+            });
+        }
+    </script>
 </div>
+
 
 
 
