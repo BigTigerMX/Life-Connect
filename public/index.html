@@ -883,120 +883,104 @@
     </div>
 </div>
 
-<!-- PANTALLA 11: GUÍA DE PRIMEROS AUXILIOS (VERSIÓN MEJORADA) -->
+<!-- PANTALLA 11: GUÍA DE PRIMEROS AUXILIOS -->
 <div id="screen-first-aid" class="screen">
     <header class="screen-header">
         <button class="btn-back" onclick="backHome()">
             <i class="fas fa-arrow-left"></i>
         </button>
-        <h2>Guía de Primeros Auxilios</h2>
+        <h2>Primeros Auxilios</h2>
         <div class="header-spacer"></div>
     </header>
 
-    <div class="first-aid-container">
-        <!-- Barra de búsqueda estilizada -->
-        <div class="search-container">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Buscar tema..." onkeyup="searchFirstAid(this.value)">
+    <div class="first-aid-wrapper">
+        <!-- Buscador -->
+        <div class="aid-search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="aid-search-input" placeholder="¿Qué necesitas buscar?" onkeyup="searchFirstAid(this.value)">
+        </div>
+
+        <!-- Grid de temas -->
+        <div class="aid-topics-grid">
+            <div class="aid-topic-card" onclick="showAidDetail('cpr')">
+                <div class="topic-icon-bg" style="background: rgba(220, 38, 38, 0.2);">
+                    <span>🫀</span>
+                </div>
+                <div class="topic-info">
+                    <h4>Reanimación CPR</h4>
+                    <p>Paro cardíaco, compresiones</p>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="aid-topic-card" onclick="showAidDetail('bleeding')">
+                <div class="topic-icon-bg" style="background: rgba(217, 119, 6, 0.2);">
+                    <span>🩸</span>
+                </div>
+                <div class="topic-info">
+                    <h4>Hemorragias</h4>
+                    <p>Sangrado grave, heridas</p>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="aid-topic-card" onclick="showAidDetail('choking')">
+                <div class="topic-icon-bg" style="background: rgba(37, 99, 235, 0.2);">
+                    <span>🗣️</span>
+                </div>
+                <div class="topic-info">
+                    <h4>Atragantamiento</h4>
+                    <p>Obstrucción vías aéreas</p>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="aid-topic-card" onclick="showAidDetail('burns')">
+                <div class="topic-icon-bg" style="background: rgba(245, 158, 11, 0.2);">
+                    <span>🔥</span>
+                </div>
+                <div class="topic-info">
+                    <h4>Quemaduras</h4>
+                    <p>Primeros auxilios térmicos</p>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="aid-topic-card" onclick="showAidDetail('fractures')">
+                <div class="topic-icon-bg" style="background: rgba(139, 92, 246, 0.2);">
+                    <span>🦴</span>
+                </div>
+                <div class="topic-info">
+                    <h4>Fracturas</h4>
+                    <p>Huesos rotos, inmovilizar</p>
+                </div>
+                <i class="fas fa-chevron-right"></i>
+            </div>
+
+            <div class="aid-topic-card" onclick="showAidDetail('cuts')">
+                <div class="topic-icon-bg" style="background: rgba(16, 185, 129, 0.2);">
+                    <span>🩹</span>
+                </div>
+                <div class="topic-info">
+                    <h4>Cortes</h4>
+                    <p>Heridas menores, vendajes</p>
+                </div>
+                <i class="fas fa-chevron-right"></i>
             </div>
         </div>
 
-        <!-- Grid de temas mejorado -->
-        <div class="first-aid-grid" id="first-aid-grid">
-            <div class="aid-card" onclick="showAidDetail('cpr')">
-                <div class="aid-icon-wrapper">
-                    <div class="aid-icon">🫀</div>
-                </div>
-                <div class="aid-content">
-                    <h3>RCP / Reanimación</h3>
-                    <p>Paro cardíaco, compresiones, desfibrilador</p>
-                    <span class="aid-tag tag-urgent">Crítico</span>
-                </div>
-                <i class="fas fa-chevron-right aid-arrow"></i>
-            </div>
-
-            <div class="aid-card" onclick="showAidDetail('bleeding')">
-                <div class="aid-icon-wrapper">
-                    <div class="aid-icon">🩸</div>
-                </div>
-                <div class="aid-content">
-                    <h3>Sangrado Grave</h3>
-                    <p>Hemorragias, heridas profundas, torniquetes</p>
-                    <span class="aid-tag tag-urgent">Crítico</span>
-                </div>
-                <i class="fas fa-chevron-right aid-arrow"></i>
-            </div>
-
-            <div class="aid-card" onclick="showAidDetail('choking')">
-                <div class="aid-icon-wrapper">
-                    <div class="aid-icon">🗣️</div>
-                </div>
-                <div class="aid-content">
-                    <h3>Atragantamiento</h3>
-                    <p>Manobra de Heimlich, vías respiratorias</p>
-                    <span class="aid-tag tag-urgent">Crítico</span>
-                </div>
-                <i class="fas fa-chevron-right aid-arrow"></i>
-            </div>
-
-            <div class="aid-card" onclick="showAidDetail('burns')">
-                <div class="aid-icon-wrapper">
-                    <div class="aid-icon">🔥</div>
-                </div>
-                <div class="aid-content">
-                    <h3>Quemaduras</h3>
-                    <p>Primer, segundo y tercer grado</p>
-                    <span class="aid-tag tag-warning">Moderado</span>
-                </div>
-                <i class="fas fa-chevron-right aid-arrow"></i>
-            </div>
-
-            <div class="aid-card" onclick="showAidDetail('fractures')">
-                <div class="aid-icon-wrapper">
-                    <div class="aid-icon">🦴</div>
-                </div>
-                <div class="aid-content">
-                    <h3>Fracturas</h3>
-                    <p>Huesos rotos, inmovilización, esguinces</p>
-                    <span class="aid-tag tag-warning">Moderado</span>
-                </div>
-                <i class="fas fa-chevron-right aid-arrow"></i>
-            </div>
-
-            <div class="aid-card" onclick="showAidDetail('cuts')">
-                <div class="aid-icon-wrapper">
-                    <div class="aid-icon">🩹</div>
-                </div>
-                <div class="aid-content">
-                    <h3>Cortes y Heridas</h3>
-                    <p>Suturas, vendajes, desinfección</p>
-                    <span class="aid-tag tag-info">Leve</span>
-                </div>
-                <i class="fas fa-chevron-right aid-arrow"></i>
-            </div>
-        </div>
-
-        <!-- Sección de consejos rápidos -->
-        <div class="quick-tips-section">
-            <h3><i class="fas fa-lightbulb"></i> Consejos Rápidos</h3>
-            <div class="tips-grid">
-                <div class="tip-item">
-                    <i class="fas fa-phone-alt"></i>
-                    <span>En duda, llama al 911 primero</span>
-                </div>
-                <div class="tip-item">
-                    <i class="fas fa-hands-wash"></i>
-                    <span>Lava tus manos antes de tocar heridas</span>
-                </div>
-                <div class="tip-item">
-                    <i class="fas fa-ambulance"></i>
-                    <span>No muevas a un herido grave</span>
-                </div>
-            </div>
+        <!-- Consejos -->
+        <div class="aid-tips-box">
+            <h3><i class="fas fa-star" style="color: #FCD34D;"></i> Reglas de Oro</h3>
+            <ul>
+                <li><i class="fas fa-check" style="color: #10B981;"></i> Mantén la calma siempre</li>
+                <li><i class="fas fa-check" style="color: #10B981;"></i> Llama al 911 antes de actuar si es grave</li>
+                <li><i class="fas fa-check" style="color: #10B981;"></i> No muevas al herido si sospechas fractura</li>
+            </ul>
         </div>
     </div>
 </div>
+
 
 
 <!-- MODAL: DETALLE DE HISTORIAL -->
