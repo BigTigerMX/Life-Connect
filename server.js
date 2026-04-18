@@ -180,3 +180,8 @@ server.listen(PORT, '0.0.0.0', () => {
     console.log(`📱 http://${localIp}:${PORT}  <-- USA ESTA EN TU CELULAR`);
 });
 
+// Al final de server.js, reemplaza el listen por:
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`🚑 Server running on port ${PORT}`);
+});
