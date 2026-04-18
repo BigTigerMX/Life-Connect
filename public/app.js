@@ -33,7 +33,8 @@ const CONFIG = {
 };
 
 const WS_CONFIG = {
-    URL: 'wss://purifier-purging-footsie.ngrok-free.app',
+    URL: 'wss://life-connect-p10c.onrender.com',
+
     RECONNECT_INTERVAL: 3000,
     MAX_RECONNECT_ATTEMPTS: 10
 };
